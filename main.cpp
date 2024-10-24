@@ -79,28 +79,44 @@ int main() {
   }
   cout << '\n';
 
-  // write more tests
+
 
   cout << "=================== Question 5 ===================\n\n";
 
- // write more tests
-
-  // Maybe add an array which can run through all 3 files in one go
+  // Create an array which can run through all 3 files in one go
   const char* files[] = {"mystery1.dat", "mystery2.dat", "mystery3.dat"};
-  for (int i = 0; i < 3; i++) {
-      load_board(files[i], board);
-      int rec_counter = 0;  // Reset counter for each new board
 
+  // Loop through the array of files  
+  for (int i = 0; i < 3; i++) {
+
+      // Load the files on the board
+      load_board(files[i], board);
+
+      // Reset the counter for each new board
+      int rec_counter = 0;  
+
+      // Set the boolean to false
       bool solved = false;
-      int time_taken = calc_time(board, rec_counter, solved);  // Solve and measure time
+
+      // Solve the board and calculate the time
+      int time_taken = calc_time(board, rec_counter, solved);  
+
+      // Display the results
       if (solved) {
+
         cout << "The " << files[i] << " board has a solution:\n";
+
         display_board(board);
+
         cout << "The total number of recursions: " << rec_counter << endl;
+
         cout << "The time taken to solve this problem: " << time_taken << " milliseconds" << endl;
+
       } else {
+
         cout << "The " << files[i] << " board is unsolvable.\n";
       }
+
       cout << '\n';
   }
 

@@ -75,6 +75,8 @@ void display_board(const char board[9][9]) {
 
 /* add your functions here */
 
+// "=================== Question 1 ==================="
+
 bool is_complete(const char board[9][9]){
 	for (int i=0; i < 9;i++ ){
 		for (int j=0; j<9;j++){
@@ -85,12 +87,15 @@ bool is_complete(const char board[9][9]){
 	return false;
 }
 
-bool make_move(const char* position, char digit, char board[9][9]){
-	
-	int row = position[0] - 'A'; // Assuming first character is a digit ('0'-'8')
-  int col = position[1] - '0' ; // Assuming second character is a digit ('0'-'8')
+// "=================== Question 2 ==================="
 
-  // Validate row and column indices for accessing the Sudoku board.
+bool make_move(const char* position, char digit, char board[9][9]){
+	// Get row as a integer by subtracting the character value of 'A'
+	int row = position[0] - 'A'; 
+  // Get column as a integer by subtracting the character value of '0'
+  int col = position[1] - '0' ;
+
+  // Check if row and column indices are valid while in the sudoku board
 	if (row < 0 || row >= 9 || col < 0 || col >= 9 ){
 		return false;}
 
@@ -99,17 +104,22 @@ bool make_move(const char* position, char digit, char board[9][9]){
 		return false;
 	}
 
-	// Check the 3 x 3 sector if you can make a move
+	// Check the 3 x 3 sector if you can make a move with the digit 
+  // Get the starting row and column for the 3 x 3 sector
 	int startrow = (row  / 3) * 3;
+  // Get the starting row and column for the 3 x 3 sector
 	int startcol = (col / 3) * 3;
+
+  // Loop through the 3 x 3 sector
 	for (int i = startrow; i < startrow + 3; i++){
 		for(int j = startcol; j < startcol + 3; j++){
+      // Check if the digit is already in the row or column of the 3 x 3 sector
 			if (board[i][j] == digit){
 				return false;
 			}
-
 		}
 	}
+
   // Check if digit is already in row or column
 	for (int i = 0; i < 9; i++){
 			if (board[row][i]==digit || board[i][col] == digit){
@@ -123,74 +133,75 @@ bool make_move(const char* position, char digit, char board[9][9]){
 	return true;
 }
 
+// "=================== Question 3 ==================="
 
 bool save_board(const char* filename , const char board[9][9]){
 // Outputs the two dimensional character array board to file with name filename
 // Return value should be true if file successfully written
 
+// Open the input and output streams for reading the file and writing the copy
 ifstream in_stream;
 ofstream out_stream;
 
+// Open the file with the name filename
 in_stream.open(filename);
 out_stream.open("copy_of_dat");
 
+// Check if the file was opened successfully if not then return false
 if (!out_stream){
 	return false;
 }
 
-// Display board function - but convert the Cout to out_stream
-out_stream << "    ";
-  for (int r = 0; r < 9; r++) {
-    out_stream << (char)('1' + r) << "   ";
-  }
-  out_stream  << '\n';
-  
-  for (int r = 0; r < 9; r++) {
-    if (!(r % 3)) {
-      out_stream << "  +===========+===========+===========+\n";
-    } else {
-      out_stream << "  +---+---+---+---+---+---+---+---+---+\n";
+// Save the board to the file
+for (int row = 0; row < 9; ++row) {
+    for (int col = 0; col < 9; ++col) {
+        out_stream << board[row][col];
     }
-
-	out_stream << (char)('A' + r) << " ";
-    for (int i = 0; i < 9; i++) {
-      out_stream << ((i % 3) ? ':' : '|') << " ";
-      out_stream << ((board[r][i] == '.') ? ' ' : board[r][i]) << " ";
-    }
-    out_stream << "|\n";
-  }
-  
-  out_stream << "  +===========+===========+===========+\n"; // Frame at the end
-
-  out_stream.close();
-  in_stream.close();
-
-  return true;
+    out_stream << '\n'; // Add a newline after each row
 }
-// Wrapper function to ensure that the counter 
+
+out_stream.close();
+in_stream.close();
+
+return true;
+}
+
+// "=================== Question 4 ==================="
+
+// Wrapper function to ensure that the counter is reset and the board is solved
 bool solve_board(char board[9][9]){
+
 	int rec_counter = 0;
+
+  // Call the recursive function to solve the board
 	return solve_board(board,rec_counter);
 }
 
 // Function to solve the Sudoku board using recursion
 bool solve_board(char board[9][9], int &rec_counter){
 
-	char position[3]; // Array to hold the current row and column
-	position[2] = '\0'; // Insert the Null terminator at the end of the string
+  // Array to hold the current row and column
+	char position[3]; 
+
+  // Insert the Null terminator at the end of the string
+	position[2] = '\0'; 
 	
 	// Loop through each row from ('A' to 'I')
 	for (char row = 'A'; row <= 'I'; row++){ 
+
 		// Loop through each column ('0' to '8')
 		for (char col = '0'; col <= '8'; col++){
+
 			// Check if the current cell is empty (denoted by '.')
 			if (board[row - 'A'][col - '0'] == '.'){
+
 				// Store the current position of row and column
 				position[0] = row;
 				position[1] = col; 
 
 				// Try placing digits '1' to '9' in the current cell
 				for (char digit = '1'; digit <= '9'; digit++){ 
+
 					// Check if the current digit is a valid move 
 					if (make_move(position,digit,board)){ // Returns a boolean of true or false in terms of valid
 						// Increment the recursive counter
@@ -198,12 +209,14 @@ bool solve_board(char board[9][9], int &rec_counter){
   
             // If the board is solved, return true
 						if (solve_board(board,rec_counter)){
+
 							return true;}
 
 						// Else backtrack through the code by resetting the previous value to empty
 						board[row - 'A'][col - '0'] = '.';
 					}
 				} // I no valid digit is found for the current cell, backtrack 
+
 				return false;
 			}
 		}
@@ -212,7 +225,9 @@ bool solve_board(char board[9][9], int &rec_counter){
 	return true;
 }
 
+// "=================== Question 5 ==================="
 
+// Function which calculates the time taken to solve the board using recursion
 int calc_time(char board[9][9], int &rec_counter, bool &solved) {
     // Start the timer
     auto start = std::chrono::high_resolution_clock::now();

@@ -1,2 +1,27 @@
-Summarise your findings here (see specification).
+SUMMARY OF THE PROGRAM:
+This program is designed to take a partially completed sudoku and solve it completely. 
+It reads in .dat files containing the board, displays the board in a user-friendly format, 
+and systematically determines the correct move for each empty cell. 
+The make_move function takes in a digit and checks whether it can be legally placed in a cell 
+by validating it against the current row, column and the smaller 3 x 3 grid that the cell belongs to.
+It cycles through digits from 1 to 9 until it find a valid number for the position.
+If the program reaches a point where no valid digit can be placed, it backtracks by recursively changing previous moves, 
+correcting mistakes, and filling in remaining empty spaces. 
+This recursive process continues until the entire board is filled correctly. 
 
+EXPLANATION OF FINDINGS AND ASSESSING THE DIFFICULTY OF EACH BOARD:
+When testing the three Sudoku puzzles provided, the difficulty of each board was assessed 
+based on the number of recursions the program performed while solving them. 
+This method works both for humans and computers as when solving Sudoku manually, 
+the hardest puzzles are those that require frequent backtracking and corrections. 
+Similarly, for the computer, more recursions mean more steps are required to reach the solution, 
+taking longer time and more computational resources being used.
+
+Therefore based on this criteria it can be said that the boards can be ranked thus:
+1) Mystery 3: Hard difficulty
+	- Number of Recursions: 14133
+	- Time taken to solve: 3 milliseconds
+2) Mystery 1: Extremely hard difficulty
+	- Number of Recursions: 421546
+	- Time taken to solve: 129 milliseconds
+3) Mystery 2: Impossible to solve
